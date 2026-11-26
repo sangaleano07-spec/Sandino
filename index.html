@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="Control financiero personal: ingresos, trabajos, gastos y ahorro.">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="48x48" href="./favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+<title>Mi Control Financiero</title>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--ink:#172033;--muted:#687386;--line:#e4e8ef;--navy:#111827;--gold:#c99b35;--green:#16845b;--red:#c74747;--blue:#3266b2;--radius:17px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:12px 15px;background:var(--navy);color:white;font-weight:650}button.secondary{background:#e9edf3;color:#253047}button.danger{background:#fff0f0;color:#a83232}button.small{padding:7px 10px;font-size:13px}.app{max-width:1050px;margin:auto;padding:14px 14px 92px}.top{display:flex;align-items:center;gap:13px;background:var(--navy);color:#fff;padding:15px;border-radius:20px;margin-bottom:15px}.logo{width:54px;height:54px;object-fit:contain;background:#fff;border-radius:12px;padding:3px}.top h1{font-size:18px;margin:0}.top p{margin:3px 0 0;color:#cbd2df;font-size:12px}.top .spacer{flex:1}.tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 12px;scrollbar-width:none}.tabs button{white-space:nowrap;background:#e6eaf0;color:#263348;padding:10px 13px}.tabs button.active{background:var(--gold);color:#171717}.page{display:none}.page.active{display:block}.section-title{font-size:19px;margin:9px 0 12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric,.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:0 3px 12px #18243a08}.metric span{font-size:12px;color:var(--muted)}.metric strong{display:block;font-size:21px;margin-top:6px;overflow-wrap:anywhere}.metric small{color:var(--muted)}.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}.panel{margin-top:12px}.panel h3{font-size:15px;margin:0 0 12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted);font-weight:650}input,select,textarea{width:100%;padding:11px;border:1px solid #d9dfe8;border-radius:11px;background:#fff;color:var(--ink);min-width:0}textarea{min-height:72px;resize:vertical}.form-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.list{display:grid;gap:8px}.item{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}.item .grow{flex:1;min-width:0}.item b{display:block;overflow-wrap:anywhere}.item small{color:var(--muted)}.item .amount{font-weight:750;white-space:nowrap}.empty{padding:22px;text-align:center;color:var(--muted)}.pill{display:inline-block;border-radius:30px;background:#eef1f5;padding:3px 8px;font-size:11px;color:#536075}.barrow{display:grid;grid-template-columns:95px 1fr 85px;align-items:center;gap:8px;margin:9px 0;font-size:12px}.bar{height:10px;background:#edf0f4;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold);border-radius:10px}.notice{font-size:12px;color:var(--muted);line-height:1.5}.hidden{display:none!important}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:9px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted)}.bottomnote{text-align:center;color:var(--muted);font-size:11px;margin:20px 0}.filelabel{display:inline-flex;align-items:center;gap:7px;background:#e9edf3;color:#263348;border-radius:12px;padding:11px 13px;font-weight:650;cursor:pointer}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.app{padding-top:22px}.formgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media print{body{background:white}.app{max-width:none;padding:0}.top,.tabs,.no-print,.form-actions{display:none!important}.page{display:none!important}#reportPage{display:block!important}.panel,.metric{box-shadow:none;break-inside:avoid}.printlogo{display:block!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<img class="logo" id="headerLogo" src="./logo.png" alt="Logotipo">
+<div><h1>MI CONTROL FINANCIERO</h1><p>Registro diario de ingresos, gastos y trabajos · Gs.</p></div><div class="spacer"></div>
+<button class="small secondary" onclick="showPage('settings')">Ajustes</button>
+</header>
+<nav class="tabs no-print" id="tabs">
+<button class="active" data-page="home">Resumen</button><button data-page="jobs">Trabajos</button><button data-page="income">Ingresos</button><button data-page="expenses">Gastos</button><button data-page="savings">Ahorro</button><button data-page="history">Historial</button><button data-page="reports">Informes</button><button data-page="advisor">Asesor</button>
+</nav>
+
+<section id="home" class="page active">
+<h2 class="section-title">Resumen financiero</h2>
+<div class="grid">
+<div class="metric"><span>Dinero disponible</span><strong id="cash">Gs. 0</strong><small>Saldo inicial + cobros − pagos</small></div>
+<div class="metric"><span>Ingresos del mes</span><strong id="monthIncome" class="green">Gs. 0</strong></div>
+<div class="metric"><span>Gastos del mes</span><strong id="monthExpense" class="red">Gs. 0</strong></div>
+<div class="metric"><span>Ganancia operativa del mes</span><strong id="monthNet" class="blue">Gs. 0</strong></div>
+<div class="metric"><span>Ingresos pendientes</span><strong id="receivable">Gs. 0</strong></div>
+<div class="metric"><span>Pagos pendientes</span><strong id="payable">Gs. 0</strong></div>
+<div class="metric"><span>Trabajos del mes</span><strong id="jobCount">0</strong></div>
+<div class="metric"><span>Promedio neto por jornada</span><strong id="average">Gs. 0</strong></div>
+</div>
+<div class="panel"><h3>Ingresos y gastos del mes</h3><div id="monthBars"></div></div>
+<div class="panel"><h3>Acciones rápidas</h3><div class="actions"><button onclick="showPage('jobs')">＋ Registrar trabajo</button><button class="secondary" onclick="showPage('expenses')">＋ Registrar gasto</button><button class="secondary" onclick="showPage('income')">＋ Otro ingreso</button></div></div>
+<p class="notice">Criterio: los trabajos se contabilizan desde el módulo Trabajos. No registres el mismo cobro nuevamente en Ingresos. Los costos vinculados a trabajos no se descuentan dos veces.</p>
+</section>
+
+<section id="jobs" class="page">
+<h2 class="section-title">Trabajos y servicios</h2>
+<div class="panel">
+<h3 id="jobFormTitle">Registrar trabajo</h3>
+<form id="jobForm"><input type="hidden" id="jobId">
+<div class="formgrid">
+<div class="field"><label>Plataforma o cliente</label><select id="jobSource"><option>PedidosYa</option><option>Bolt</option><option>Tu Socio Logístico SL</option><option>Trabajo particular</option><option>Servicio independiente</option><option>Otro</option></select></div>
+<div class="field"><label>Fecha</label><input id="jobDate" type="date" required></div>
+<div class="field"><label>Tipo de trabajo</label><input id="jobType" placeholder="Ej. reparto, viaje, servicio"></div>
+<div class="field"><label>Descripción / cliente</label><input id="jobDesc" placeholder="Detalle del trabajo"></div>
+<div class="field"><label>Hora inicio</label><input id="jobStart" type="time"></div>
+<div class="field"><label>Hora fin</label><input id="jobEnd" type="time"></div>
+<div class="field"><label>Importe bruto (Gs.)</label><input id="jobGross" type="number" min="0" step="1" required></div>
+<div class="field"><label>Propinas y bonificaciones (Gs.)</label><input id="jobBonus" type="number" min="0" step="1" value="0"></div>
+<div class="field"><label>Comisión (Gs.)</label><input id="jobCommission" type="number" min="0" step="1" value="0"></div>
+<div class="field"><label>Otros costos asociados (Gs.)</label><input id="jobCosts" type="number" min="0" step="1" value="0"></div>
+<div class="field"><label>Estado de cobro</label><select id="jobStatus"><option value="paid">Cobrado</option><option value="pending">Pendiente</option></select></div>
+<div class="field"><label>Método de pago</label><select id="jobMethod"><option>Efectivo</option><option>Transferencia</option><option>Billetera</option><option>Otro</option></select></div>
+<div class="field full"><label>Observaciones</label><textarea id="jobNotes"></textarea></div>
+</div><div class="form-actions"><button type="submit">Guardar trabajo</button><button type="button" class="secondary" onclick="resetJob()">Limpiar</button></div>
+</form></div>
+<div class="panel"><h3>Trabajos registrados</h3><div id="jobList" class="list"></div></div>
+</section>
+
+<section id="income" class="page">
+<h2 class="section-title">Otros ingresos</h2>
+<div class="panel"><h3>Registrar ingreso independiente</h3><form id="incomeForm"><input type="hidden" id="incomeId"><div class="formgrid">
+<div class="field"><label>Fecha</label><input id="incomeDate" type="date" required></div>
+<div class="field"><label>Fuente</label><input id="incomeSource" list="sources" placeholder="Ej. venta, devolución" required><datalist id="sources"><option>PedidosYa</option><option>Bolt</option><option>Tu Socio Logístico SL</option><option>Trabajo particular</option><option>Servicios independientes</option><option>Otros</option></datalist></div>
+<div class="field"><label>Descripción</label><input id="incomeDesc"></div>
+<div class="field"><label>Importe (Gs.)</label><input id="incomeAmount" type="number" min="1" step="1" required></div>
+<div class="field"><label>Estado</label><select id="incomeStatus"><option value="paid">Cobrado</option><option value="pending">Pendiente</option></select></div>
+<div class="field"><label>Método de pago</label><select id="incomeMethod"><option>Efectivo</option><option>Transferencia</option><option>Billetera</option><option>Otro</option></select></div>
+<div class="field full"><label>Observaciones</label><textarea id="incomeNotes"></textarea></div>
+</div><div class="form-actions"><button>Guardar ingreso</button><button type="button" class="secondary" onclick="resetIncome()">Limpiar</button></div></form></div>
+<div class="panel"><h3>Ingresos independientes</h3><div id="incomeList" class="list"></div></div>
+</section>
+
+<section id="expenses" class="page">
+<h2 class="section-title">Gastos</h2>
+<div class="panel"><h3>Registrar gasto</h3><form id="expenseForm"><input type="hidden" id="expenseId"><div class="formgrid">
+<div class="field"><label>Fecha</label><input id="expenseDate" type="date" required></div>
+<div class="field"><label>Tipo</label><select id="expenseType"><option value="labor">Laboral</option><option value="personal">Personal</option></select></div>
+<div class="field"><label>Categoría</label><input id="expenseCategory" list="categories" placeholder="Combustible, alimentación..." required><datalist id="categories"><option>Combustible</option><option>Mantenimiento</option><option>Reparaciones</option><option>Aceite</option><option>Repuestos</option><option>Estacionamiento</option><option>Datos móviles</option><option>Alimentación</option><option>Vivienda</option><option>Servicios básicos</option><option>Salud</option><option>Compras personales</option><option>Entretenimiento</option><option>Educación</option><option>Otros</option></datalist></div>
+<div class="field"><label>Descripción</label><input id="expenseDesc"></div>
+<div class="field"><label>Importe (Gs.)</label><input id="expenseAmount" type="number" min="1" step="1" required></div>
+<div class="field"><label>Estado</label><select id="expenseStatus"><option value="paid">Pagado</option><option value="pending">Pendiente</option></select></div>
+<div class="field"><label>Método de pago</label><select id="expenseMethod"><option>Efectivo</option><option>Transferencia</option><option>Billetera</option><option>Otro</option></select></div>
+<div class="field full"><label>Observaciones</label><textarea id="expenseNotes"></textarea></div>
+</div><div class="form-actions"><button>Guardar gasto</button><button type="button" class="secondary" onclick="resetExpense()">Limpiar</button></div></form></div>
+<div class="panel"><h3>Gastos registrados</h3><div id="expenseList" class="list"></div></div>
+</section>
+
+<section id="savings" class="page">
+<h2 class="section-title">Objetivos de ahorro</h2>
+<div class="panel"><h3>Crear objetivo</h3><form id="goalForm"><div class="formgrid"><div class="field"><label>Nombre del objetivo</label><input id="goalName" required></div><div class="field"><label>Meta (Gs.)</label><input id="goalTarget" type="number" min="1" required></div><div class="field"><label>Fecha objetivo</label><input id="goalDate" type="date"></div></div><div class="form-actions"><button>Crear objetivo</button></div></form></div>
+<div class="panel"><h3>Mis objetivos</h3><div id="goalList" class="list"></div></div>
+</section>
+
+<section id="history" class="page">
+<h2 class="section-title">Historial</h2>
+<div class="panel"><div class="formgrid"><div class="field"><label>Desde</label><input id="filterFrom" type="date"></div><div class="field"><label>Hasta</label><input id="filterTo" type="date"></div><div class="field"><label>Tipo</label><select id="filterType"><option value="all">Todos</option><option value="job">Trabajos</option><option value="income">Ingresos</option><option value="expense">Gastos</option></select></div></div><div class="form-actions"><button onclick="renderHistory()">Aplicar filtros</button><button class="secondary" onclick="clearFilters()">Limpiar</button></div><div id="historyList" class="list" style="margin-top:12px"></div></div>
+</section>
+
+<section id="reports" class="page">
+<h2 class="section-title">Informes y cierre diario</h2>
+<div class="panel"><h3>Generar informe</h3><div class="formgrid"><div class="field"><label>Desde</label><input id="reportFrom" type="date"></div><div class="field"><label>Hasta</label><input id="reportTo" type="date"></div></div><div class="form-actions no-print"><button onclick="generateReport()">Preparar informe</button><button class="secondary" onclick="downloadCSV()">Exportar CSV</button><button class="secondary" onclick="backupJSON()">Respaldo JSON</button><label class="filelabel">Restaurar JSON<input id="restoreFile" type="file" accept="application/json" hidden></label></div></div>
+<div class="panel"><h3>Cierre diario</h3><div class="field"><label>Fecha de cierre</label><input id="closeDate" type="date"></div><div class="form-actions no-print"><button onclick="dailyClose()">Cerrar jornada y generar informe</button></div><div id="closeResult"></div></div>
+<div id="reportPage" class="panel"><div id="reportContent"><p class="empty">Seleccioná un período y prepará el informe.</p></div><div class="form-actions no-print"><button onclick="window.print()">Imprimir / Guardar PDF</button></div></div>
+</section>
+
+<section id="advisor" class="page">
+<h2 class="section-title">Asesor financiero</h2><div class="panel"><h3>Análisis de tus registros</h3><div id="advisorContent" class="notice">Se necesitan registros para generar recomendaciones.</div></div>
+</section>
+
+<section id="settings" class="page">
+<h2 class="section-title">Ajustes y respaldo</h2>
+<div class="panel"><h3>Logotipo de la aplicación</h3><div style="display:flex;align-items:center;gap:14px"><img id="settingsLogo" class="logo" src="./logo.png"><div><label class="filelabel">Seleccionar imagen<input id="logoPicker" type="file" accept="image/png,image/jpeg,image/webp" hidden></label><p class="notice">La imagen se guarda en este dispositivo mediante IndexedDB.</p><button class="small secondary" onclick="restoreDefaultLogo()">Restaurar logotipo original</button></div></div></div>
+<div class="panel"><h3>Saldo inicial</h3><div class="field"><label>Dinero disponible al comenzar (Gs.)</label><input id="openingBalance" type="number" step="1" value="0"></div><div class="form-actions"><button onclick="saveOpening()">Guardar saldo inicial</button></div></div>
+<div class="panel"><h3>Seguridad y datos</h3><p class="notice">Los registros se guardan localmente en este navegador. Si borrás los datos del navegador, podrías perderlos. Exportá respaldos JSON periódicamente.</p><div class="actions"><button class="secondary" onclick="backupJSON()">Descargar respaldo</button><button class="danger" onclick="clearAll()">Borrar todos los datos</button></div></div>
+</section>
+<footer class="bottomnote">MI CONTROL FINANCIERO · Datos almacenados localmente en tu dispositivo</footer>
+</div>
+<script>
+const KEY='mcf_data_v1', $=id=>document.getElementById(id), today=()=>new Date().toISOString().slice(0,10);
+let db=loadDB();
+function loadDB(){try{return Object.assign({jobs:[],incomes:[],expenses:[],goals:[],closes:[],opening:0},JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return {jobs:[],incomes:[],expenses:[],goals:[],closes:[],opening:0}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function money(n){return 'Gs. '+Math.round(Number(n)||0).toLocaleString('es-PY')}
+function val(id){return $(id).value}
+function num(id){return Math.max(0,Number(val(id))||0)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function showPage(p){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===p));document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));if(p==='settings'){$('openingBalance').value=db.opening||0}if(p==='advisor')renderAdvisor();window.scrollTo(0,0)}
+$('tabs').addEventListener('click',e=>{let b=e.target.closest('button[data-page]');if(b)showPage(b.dataset.page)});
+function sum(a,fn){return a.reduce((t,x)=>t+fn(x),0)}
+function isMonth(d){return (d||'').slice(0,7)===today().slice(0,7)}
+function totals(){
+ let jobs=db.jobs, incomes=db.incomes, expenses=db.expenses;
+ let grossJobs=sum(jobs,j=>j.gross+j.bonus), jobCommission=sum(jobs,j=>j.commission), jobCosts=sum(jobs,j=>j.costs);
+ let standalone=sum(incomes,i=>i.amount), labor=sum(expenses.filter(e=>e.type==='labor'),e=>e.amount), personal=sum(expenses.filter(e=>e.type==='personal'),e=>e.amount);
+ let generated=grossJobs+standalone, operating=generated-jobCommission-jobCosts-labor;
+ let collectedJobs=sum(jobs.filter(j=>j.status==='paid'),j=>j.gross+j.bonus-j.commission);
+ let collectedIncome=sum(incomes.filter(i=>i.status==='paid'),i=>i.amount);
+ let paidExpenses=sum(expenses.filter(e=>e.status==='paid'),e=>e.amount);
+ let cash=(Number(db.opening)||0)+collectedJobs+collectedIncome-paidExpenses;
+ return {grossJobs,jobCommission,jobCosts,standalone,labor,personal,generated,operating,collectedJobs,collectedIncome,paidExpenses,cash,receivable:sum(jobs.filter(j=>j.status==='pending'),j=>j.gross+j.bonus-j.commission)+sum(incomes.filter(i=>i.status==='pending'),i=>i.amount),payable:sum(expenses.filter(e=>e.status==='pending'),e=>e.amount)}
+}
+function monthStats(){let j=db.jobs.filter(x=>isMonth(x.date)),i=db.incomes.filter(x=>isMonth(x.date)),e=db.expenses.filter(x=>isMonth(x.date));let gross=sum(j,x=>x.gross+x.bonus)+sum(i,x=>x.amount),comm=sum(j,x=>x.commission),cost=sum(j,x=>x.costs),lab=sum(e.filter(x=>x.type==='labor'),x=>x.amount),personal=sum(e.filter(x=>x.type==='personal'),x=>x.amount);return {income:gross,expense:comm+cost+lab+personal,net:gross-comm-cost-lab,count:j.length,days:new Set(j.map(x=>x.date)).size}}
+function renderHome(){let t=totals(),m=monthStats();$('cash').textContent=money(t.cash);$('monthIncome').textContent=money(m.income);$('monthExpense').textContent=money(m.expense);$('monthNet').textContent=money(m.net);$('receivable').textContent=money(t.receivable);$('payable').textContent=money(t.payable);$('jobCount').textContent=m.count;$('average').textContent=money(m.days?m.net/m.days:0);let max=Math.max(m.income,m.expense,1);$('monthBars').innerHTML=[['Ingresos',m.income],['Gastos',m.expense]].map(([n,v])=>`<div class="barrow"><span>${n}</span><div class="bar"><i style="width:${v/max*100}%"></i></div><b>${money(v)}</b></div>`).join('')}
+function resetJob(){$('jobForm').reset();$('jobId').value='';$('jobDate').value=today();$('jobBonus').value='0';$('jobCommission').value='0';$('jobCosts').value='0';$('jobFormTitle').textContent='Registrar trabajo'}
+$('jobForm').addEventListener('submit',e=>{e.preventDefault();let o={id:$('jobId').value||id(),source:val('jobSource'),date:val('jobDate'),type:val('jobType'),desc:val('jobDesc'),start:val('jobStart'),end:val('jobEnd'),gross:num('jobGross'),bonus:num('jobBonus'),commission:num('jobCommission'),costs:num('jobCosts'),status:val('jobStatus'),method:val('jobMethod'),notes:val('jobNotes')};if(o.commission+o.costs>o.gross+o.bonus){if(!confirm('Los descuentos superan el ingreso bruto. ¿Guardar igualmente?'))return}let k=db.jobs.findIndex(x=>x.id===o.id);k<0?db.jobs.unshift(o):db.jobs[k]=o;resetJob();save()});
+function editJob(x){$('jobId').value=x.id;['source','date','type','desc','start','end','gross','bonus','commission','costs','status','method','notes'].forEach(k=>{let map={source:'jobSource',date:'jobDate',type:'jobType',desc:'jobDesc',start:'jobStart',end:'jobEnd',gross:'jobGross',bonus:'jobBonus',commission:'jobCommission',costs:'jobCosts',status:'jobStatus',method:'jobMethod',notes:'jobNotes'};$(map[k]).value=x[k]??''});$('jobFormTitle').textContent='Editar trabajo';showPage('jobs');window.scrollTo(0,0)}
+function remove(type,key){if(!confirm('¿Eliminar este registro?'))return;db[type]=db[type].filter(x=>x.id!==key);save()}
+function renderJobs(){$('jobList').innerHTML=db.jobs.length?db.jobs.map(x=>`<div class="item"><div class="grow"><b>${esc(x.source)} · ${esc(x.desc||x.type||'Trabajo')}</b><small>${x.date} · <span class="pill">${x.status==='paid'?'Cobrado':'Pendiente'}</span></small></div><div class="amount">${money(x.gross+x.bonus-x.commission-x.costs)}</div><button class="small secondary" onclick='editJob(${JSON.stringify(x).replace(/'/g,"&#39;")})'>Editar</button><button class="small danger" onclick="remove('jobs','${x.id}')">×</button></div>`).join(''):'<div class="empty">Todavía no hay trabajos registrados.</div>'}
+function resetIncome(){$('incomeForm').reset();$('incomeId').value='';$('incomeDate').value=today()}
+$('incomeForm').addEventListener('submit',e=>{e.preventDefault();let o={id:val('incomeId')||id(),date:val('incomeDate'),source:val('incomeSource'),desc:val('incomeDesc'),amount:num('incomeAmount'),status:val('incomeStatus'),method:val('incomeMethod'),notes:val('incomeNotes')};let k=db.incomes.findIndex(x=>x.id===o.id);k<0?db.incomes.unshift(o):db.incomes[k]=o;resetIncome();save()});
+function renderIncomes(){$('incomeList').innerHTML=db.incomes.length?db.incomes.map(x=>`<div class="item"><div class="grow"><b>${esc(x.source)} · ${esc(x.desc)}</b><small>${x.date} · ${x.status==='paid'?'Cobrado':'Pendiente'}</small></div><b class="amount">${money(x.amount)}</b><button class="small danger" onclick="remove('incomes','${x.id}')">×</button></div>`).join(''):'<div class="empty">No hay ingresos independientes.</div>'}
+function resetExpense(){$('expenseForm').reset();$('expenseId').value='';$('expenseDate').value=today()}
+$('expenseForm').addEventListener('submit',e=>{e.preventDefault();let o={id:val('expenseId')||id(),date:val('expenseDate'),type:val('expenseType'),category:val('expenseCategory'),desc:val('expenseDesc'),amount:num('expenseAmount'),status:val('expenseStatus'),method:val('expenseMethod'),notes:val('expenseNotes')};let k=db.expenses.findIndex(x=>x.id===o.id);k<0?db.expenses.unshift(o):db.expenses[k]=o;resetExpense();save()});
+function renderExpenses(){$('expenseList').innerHTML=db.expenses.length?db.expenses.map(x=>`<div class="item"><div class="grow"><b>${esc(x.category)} · ${esc(x.desc)}</b><small>${x.date} · ${x.type==='labor'?'Laboral':'Personal'} · ${x.status==='paid'?'Pagado':'Pendiente'}</small></div><b class="amount red">−${money(x.amount)}</b><button class="small danger" onclick="remove('expenses','${x.id}')">×</button></div>`).join(''):'<div class="empty">No hay gastos registrados.</div>'}
+$('goalForm').addEventListener('submit',e=>{e.preventDefault();db.goals.push({id:id(),name:val('goalName'),target:num('goalTarget'),date:val('goalDate'),balance:0});$('goalForm').reset();save()});
+function goalMove(gid,delta){let g=db.goals.find(x=>x.id===gid);if(!g)return;let a=Number(prompt(delta>0?'Importe del aporte (Gs.)':'Importe del retiro (Gs.)'));if(!Number.isFinite(a)||a<=0)return;if(delta<0&&a>g.balance){alert('El retiro supera el ahorro acumulado.');return}g.balance+=delta*a;save()}
+function renderGoals(){$('goalList').innerHTML=db.goals.length?db.goals.map(g=>`<div class="item"><div class="grow"><b>${esc(g.name)}</b><small>${money(g.balance)} de ${money(g.target)} · ${Math.min(100,g.balance/g.target*100||0).toFixed(1)}%</small><div class="bar"><i style="width:${Math.min(100,g.balance/g.target*100||0)}%"></i></div></div><button class="small secondary" onclick="goalMove('${g.id}',1)">＋</button><button class="small secondary" onclick="goalMove('${g.id}',-1)">−</button><button class="small danger" onclick="remove('goals','${g.id}')">×</button></div>`).join(''):'<div class="empty">Creá tu primer objetivo de ahorro.</div>'}
+function renderHistory(){let from=val('filterFrom'),to=val('filterTo'),type=val('filterType'),all=[];db.jobs.forEach(x=>all.push({...x,kind:'job',label:'Trabajo · '+x.source,amount:x.gross+x.bonus-x.commission-x.costs}));db.incomes.forEach(x=>all.push({...x,kind:'income',label:'Ingreso · '+x.source,amount:x.amount}));db.expenses.forEach(x=>all.push({...x,kind:'expense',label:'Gasto · '+x.category,amount:-x.amount}));all=all.filter(x=>(!from||x.date>=from)&&(!to||x.date<=to)&&(type==='all'||x.kind===type)).sort((a,b)=>b.date.localeCompare(a.date));$('historyList').innerHTML=all.length?all.map(x=>`<div class="item"><div class="grow"><b>${esc(x.label)}</b><small>${x.date} · ${x.status==='pending'?'Pendiente':'Registrado'}</small></div><b class="amount ${x.amount<0?'red':'green'}">${money(x.amount)}</b></div>`).join(''):'<div class="empty">No hay movimientos para estos filtros.</div>'}
+function clearFilters(){['filterFrom','filterTo'].forEach(x=>$(x).value='');$('filterType').value='all';renderHistory()}
+function renderAdvisor(){let t=totals(),jobs=db.jobs;if(!jobs.length){$('advisorContent').textContent='Todavía no hay trabajos suficientes para comparar plataformas. Registrá tus actividades para recibir un análisis basado en datos reales.';return}let groups={};jobs.forEach(j=>{let g=groups[j.source]||(groups[j.source]={n:0,net:0,hours:0});g.n++;g.net+=j.gross+j.bonus-j.commission-j.costs;if(j.start&&j.end){let [a,b]=[j.start.split(':').map(Number),j.end.split(':').map(Number)];let h=(b[0]*60+b[1]-a[0]*60-a[1])/60;if(h>0)g.hours+=h}});let best=Object.entries(groups).sort((a,b)=>b[1].net-a[1].net)[0];$('advisorContent').innerHTML=`<p><b>Actividad con mayor ganancia acumulada:</b> ${esc(best[0])} (${money(best[1].net)}).</p><p><b>Trabajos registrados:</b> ${jobs.length}.</p><p><b>Ganancia operativa calculada:</b> ${money(t.operating)} (incluye ingresos independientes y descuenta comisiones, costos asociados y gastos laborales).</p><p><b>Dinero pendiente de cobro:</b> ${money(t.receivable)}.</p><p><b>Recomendación:</b> compará también las horas dedicadas y los costos de cada plataforma antes de decidir dónde concentrar tu tiempo. El total acumulado no equivale necesariamente a rentabilidad por hora.</p>`}
+function reportData(from,to){let j=db.jobs.filter(x=>x.date>=from&&x.date<=to),i=db.incomes.filter(x=>x.date>=from&&x.date<=to),e=db.expenses.filter(x=>x.date>=from&&x.date<=to);let gross=sum(j,x=>x.gross+x.bonus)+sum(i,x=>x.amount),comm=sum(j,x=>x.commission),cost=sum(j,x=>x.costs),labor=sum(e.filter(x=>x.type==='labor'),x=>x.amount),personal=sum(e.filter(x=>x.type==='personal'),x=>x.amount);return {j,i,e,gross,comm,cost,labor,personal,net:gross-comm-cost-labor}}
+function generateReport(){let from=val('reportFrom')||'0000-01-01',to=val('reportTo')||today(),r=reportData(from,to);$('reportContent').innerHTML=`<div style="display:flex;align-items:center;gap:12px"><img class="printlogo" src="${$('headerLogo').src}" style="width:65px;height:65px;object-fit:contain;display:block"><div><h2 style="margin:0">MI CONTROL FINANCIERO</h2><small>Informe financiero · ${from} al ${to}</small></div></div><hr><h3>Resumen</h3><table><tr><th>Concepto</th><th>Importe</th></tr><tr><td>Ingresos generados</td><td>${money(r.gross)}</td></tr><tr><td>Comisiones</td><td>${money(r.comm)}</td></tr><tr><td>Costos asociados</td><td>${money(r.cost)}</td></tr><tr><td>Gastos laborales</td><td>${money(r.labor)}</td></tr><tr><td>Gastos personales</td><td>${money(r.personal)}</td></tr><tr><th>Ganancia operativa</th><th>${money(r.net)}</th></tr></table><h3>Trabajos (${r.j.length})</h3><table><tr><th>Fecha</th><th>Plataforma</th><th>Descripción</th><th>Neto</th></tr>${r.j.map(x=>`<tr><td>${x.date}</td><td>${esc(x.source)}</td><td>${esc(x.desc||x.type)}</td><td>${money(x.gross+x.bonus-x.commission-x.costs)}</td></tr>`).join('')}</table><h3>Ingresos independientes</h3><table><tr><th>Fecha</th><th>Fuente</th><th>Importe</th></tr>${r.i.map(x=>`<tr><td>${x.date}</td><td>${esc(x.source)}</td><td>${money(x.amount)}</td></tr>`).join('')}</table><h3>Gastos</h3><table><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Importe</th></tr>${r.e.map(x=>`<tr><td>${x.date}</td><td>${x.type==='labor'?'Laboral':'Personal'}</td><td>${esc(x.category)}</td><td>${money(x.amount)}</td></tr>`).join('')}</table><p><small>Documento generado localmente. Los importes están expresados en guaraníes paraguayos.</small></p>`}
+function dailyClose(){let d=val('closeDate')||today(),r=reportData(d,d);let result={date:d,generated:r.gross,commission:r.comm,costs:r.cost,labor:r.labor,personal:r.personal,net:r.net,jobs:r.j.length};let old=db.closes.findIndex(x=>x.date===d);old<0?db.closes.push(result):db.closes[old]=result;localStorage.setItem(KEY,JSON.stringify(db));$('reportFrom').value=d;$('reportTo').value=d;generateReport();$('closeResult').innerHTML=`<p><b>Cierre ${d}</b> · ${r.j.length} trabajos · Ganancia operativa: ${money(r.net)}</p>`;alert('Cierre diario guardado. Usá Imprimir / Guardar PDF para generar el documento.')}
+function download(name,content,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([content],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function downloadCSV(){let rows=[['Tipo','Fecha','Fuente/Categoría','Descripción','Importe','Estado']];db.jobs.forEach(x=>rows.push(['Trabajo',x.date,x.source,x.desc,x.gross+x.bonus-x.commission-x.costs,x.status]));db.incomes.forEach(x=>rows.push(['Ingreso',x.date,x.source,x.desc,x.amount,x.status]));db.expenses.forEach(x=>rows.push(['Gasto',x.date,x.category,x.desc,x.amount,x.status]));download('mi-control-financiero.csv','\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n'),'text/csv;charset=utf-8')}
+function backupJSON(){download('respaldo-mi-control-financiero.json',JSON.stringify(db,null,2),'application/json')}
+$('restoreFile').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!x||!Array.isArray(x.jobs)||!Array.isArray(x.incomes)||!Array.isArray(x.expenses))throw Error('Formato inválido');if(!confirm('La restauración reemplazará los registros actuales. ¿Continuar?'))return;db=Object.assign({jobs:[],incomes:[],expenses:[],goals:[],closes:[],opening:0},x);save();alert('Respaldo restaurado.')}catch(err){alert('No se pudo restaurar: archivo inválido.')}e.target.value=''});
+function saveOpening(){db.opening=Number(val('openingBalance'))||0;save();alert('Saldo inicial guardado.')}
+function clearAll(){if(!confirm('¿Borrar definitivamente todos los registros de esta aplicación en este navegador? Exportá un respaldo antes.'))return;db={jobs:[],incomes:[],expenses:[],goals:[],closes:[],opening:0};save();alert('Datos eliminados.')}
+function renderAll(){renderHome();renderJobs();renderIncomes();renderExpenses();renderGoals();renderHistory();if($('advisor').classList.contains('active'))renderAdvisor()}
+async function openDB(){return new Promise((resolve,reject)=>{let r=indexedDB.open('mcf_assets',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function setLogo(blob){try{let d=await openDB();await new Promise((res,rej)=>{let tx=d.transaction('files','readwrite');tx.objectStore('files').put(blob,'logo');tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});let url=URL.createObjectURL(blob);$('headerLogo').src=url;$('settingsLogo').src=url}catch(e){alert('No se pudo guardar el logotipo en este navegador.')}}
+async function loadLogo(){try{let d=await openDB();let blob=await new Promise((res,rej)=>{let r=d.transaction('files').objectStore('files').get('logo');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});if(blob){let u=URL.createObjectURL(blob);$('headerLogo').src=u;$('settingsLogo').src=u}}catch(e){}}
+$('logoPicker').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;if(!/^image\/(png|jpeg|webp)$/.test(f.type)){alert('Formato no admitido.');return}if(f.size>5*1024*1024){alert('La imagen supera 5 MB.');return}setLogo(f);e.target.value=''});
+async function restoreDefaultLogo(){try{let d=await openDB();d.transaction('files','readwrite').objectStore('files').delete('logo')}catch(e){}$('headerLogo').src='./logo.png';$('settingsLogo').src='./logo.png'}
+$('jobDate').value=$('incomeDate').value=$('expenseDate').value=$('closeDate').value=today();
+renderAll();loadLogo();
+if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+</script>
+</body></html>

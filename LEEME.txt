@@ -1,0 +1,40 @@
+MI CONTROL FINANCIERO — PWA
+============================
+
+TODOS LOS ARCHIVOS ESTÁN DIRECTAMENTE EN LA RAÍZ DEL ZIP.
+NO HAY SUBCARPETAS.
+
+Archivos:
+- index.html
+- manifest.json
+- sw.js
+- logo.png
+- favicon-48.png
+- icon-192.png
+- icon-512.png
+- LEEME.txt
+
+PUBLICACIÓN EN GITHUB PAGES
+1. Extraer el ZIP.
+2. Subir todos los archivos directamente a la raíz del repositorio.
+3. Abrir Settings > Pages.
+4. Seleccionar Deploy from a branch, rama main y carpeta /(root).
+5. Guardar y esperar la URL HTTPS de GitHub Pages.
+
+CORRECCIONES PWA
+- El manifiesto declara id, start_url y scope.
+- Los iconos declaran rutas relativas al propio sitio, tamaños reales y MIME image/png.
+- Se incluyen propósitos any y maskable.
+- El HTML declara favicon PNG de 48, 192 y 512 píxeles y Apple Touch Icon.
+- El Service Worker utiliza una nueva versión de caché y solo precarga archivos incluidos.
+
+NOTA SOBRE PWABUILDER
+Los avisos relacionados con capturas de pantalla son recomendaciones de presentación, no
+errores que impidan instalar la PWA. La verificación definitiva de rutas debe hacerse después
+de publicar en GitHub Pages, porque PWABuilder necesita acceder a la URL HTTPS pública.
+No es posible garantizar que todos los analizadores muestren cero recomendaciones opcionales.
+
+ANTES DE ACTUALIZAR
+Exportá un respaldo JSON de tus datos. Reemplazá los archivos en el mismo repositorio y
+mantené exactamente el mismo origen/URL de GitHub Pages para conservar los datos locales.
+No borres el almacenamiento del navegador.
